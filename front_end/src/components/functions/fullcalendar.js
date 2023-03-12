@@ -9,6 +9,9 @@ export const listEvent = async () =>
 export const updateEvent = async (values) =>
     await axios.put(process.env.REACT_APP_API + 'event', values)
 
+export const removeEvent = async (values) =>
+    await axios.delete(process.env.REACT_APP_API + 'event/'+ values)
+
 export const handleCurrentMonth = async (values) =>
     await axios.post(process.env.REACT_APP_API + 'current-Month', values)
 

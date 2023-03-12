@@ -2,6 +2,7 @@ const Events = require('../models/Events');
 const { notifyEvent } = require('../functions/notify');
 const cron = require('node-cron');
 const moment = require('moment');
+const fs = require('fs');
 
 
 exports.createEvent = async (req, res) => {
@@ -29,8 +30,27 @@ exports.updateEvent = async (req, res) => {
         console.log(req.body.id)
         // ค้นหาอะไร เปลี่ยนอะไร
         res.send(await Events.findOneAndUpdate(
-            { _id:req.body.id }, // ค้นหา
-            { start:req.body.start , end:req.body.end })); //เปลี่ยน
+            { _id: req.body.id }, // ค้นหา
+            { start: req.body.start, end: req.body.end })); //เปลี่ยน
+    } catch (err) {
+        console.log("Server Error");
+        res.status(500).send("Server Error!!");
+    }
+};
+
+exports.removeEvent = async (req, res) => {
+    try {
+        console.log(req.params.id);
+        const removeEvent = await Events.findOneAndDelete({ _id: req.params.id });
+        console.log(removeEvent.filename);
+        await fs.unlink("./public/uploads/" + removeEvent.filename, (err) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("remove Success");
+            }
+        });
+        res.send("Success Hello");
     } catch (err) {
         console.log("Server Error");
         res.status(500).send("Server Error!!");
@@ -84,11 +104,11 @@ cron.schedule('00 08 * * *', () => {
     handleCurrentDate()
 });
 
-exports.updateImage = async(req,res) => {
+exports.updateImage = async (req, res) => {
     try {
         const id = req.body.id
         const filename = req.file.filename
-        const updateImage = await Events.findOneAndUpdate({ _id:id }, { filename:filename })
+        const updateImage = await Events.findOneAndUpdate({ _id: id }, { filename: filename })
         res.send(updateImage);
     } catch (err) {
         console.log(err);

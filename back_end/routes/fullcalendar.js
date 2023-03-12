@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { createEvent , listEvent, handleCurrentMonth, updateImage , updateEvent } = require('../controllers/fullcalendar');
+const { createEvent , listEvent, handleCurrentMonth, updateImage , updateEvent, removeEvent } = require('../controllers/fullcalendar');
 
 /* Multer */
 const multer = require('multer');
@@ -49,6 +49,12 @@ router.post('/current-Month', handleCurrentMonth)
 // Access   = Public
 
 router.post('/update-Image', upload, updateImage)
+
+// Endpoint = localhost:5000/api/update-Image
+// Method   = DELETE
+// Access   = Public
+
+router.delete('/event/:id', removeEvent)
 
 
 

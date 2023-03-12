@@ -11,7 +11,7 @@ import moment from 'moment'
 import { Col, Row, Modal, Card, Tag } from 'antd';
 
 // Functions
-import { createEvent, listEvent, handleCurrentMonth, updateImage, updateEvent } from '../functions/fullcalendar';
+import { createEvent, listEvent, handleCurrentMonth, updateImage, updateEvent, removeEvent} from '../functions/fullcalendar';
 
 // CSS
 import './Index.css'
@@ -107,11 +107,11 @@ const Index = () => {
             end: info.event.endStr
         }
         updateEvent(values)
-        .then(res=> {
-            console.log(res)
-        }).catch(err => {
-            console.log(err)
-        })
+            .then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
     }
 
     const drag = () => {
@@ -139,6 +139,19 @@ const Index = () => {
         setImage(info.event._def.extendedProps.filename);
     }
     console.log(image);
+
+    const handleRemove = () => {
+        removeEvent(id)
+            .then(res => {
+                //code
+                loadData()
+                console.log(res)
+            }).catch(err => {
+                //error
+                console.log(err)
+            })
+        setModal2Open(false);
+    }
 
     const onChangeValues = (event_name) => {
         console.log(event_name.target.value);
@@ -267,7 +280,13 @@ const Index = () => {
                         </select></p>
                         <p>กรุณากรอกข้อมูล...</p>
                     </Modal>
-                    <Modal title="[ภาพถ่ายกิจกรรม]" open={modal2Open} onOk={handleOk2} onCancel={handleCancel2}>
+                    <Modal title="[ภาพถ่ายกิจกรรม]" open={modal2Open} onOk={handleOk2} onCancel={handleCancel2}
+                        footer={[
+                            <button onClick={handleOk2} >Submit</button>,
+                            <button onClick={handleCancel2} >Cancel</button>,
+                            <button onClick={handleRemove} >Delete</button>
+                        ]}
+                    >
                         <img src={process.env.REACT_APP_IMAGE + image} alt="" width="100%" />
                         <input type="file" onChange={handleFile} name="file" />
                     </Modal>
