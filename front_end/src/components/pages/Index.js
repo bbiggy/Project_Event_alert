@@ -11,7 +11,7 @@ import moment from 'moment'
 import { Col, Row, Modal, Card, Tag } from 'antd';
 
 // Functions
-import { createEvent, listEvent, handleCurrentMonth, updateImage } from '../functions/fullcalendar';
+import { createEvent, listEvent, handleCurrentMonth, updateImage, updateEvent } from '../functions/fullcalendar';
 
 // CSS
 import './Index.css'
@@ -32,7 +32,7 @@ const Index = () => {
     const [id, setId] = useState('')
     const [file, setFile] = useState('')
     const [image, setImage] = useState('')
-    const localhost_image = process.env.REACT_APP_IMAGE+image;
+    const localhost_image = process.env.REACT_APP_IMAGE + image;
 
     const tag = [
         { id: '1', tag: 'นักศึกษาปี 63', color: '#EA3109' },
@@ -98,6 +98,22 @@ const Index = () => {
         })
     }
 
+    // Handle move
+    const handleChange = (info) => {
+        //console.log(info.event._def.extendedProps._id, info.event.startStr, info.event.endStr)
+        const values = {
+            id: info.event._def.extendedProps._id,
+            start: info.event.startStr,
+            end: info.event.endStr
+        }
+        updateEvent(values)
+        .then(res=> {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     const drag = () => {
         let draggable = document.getElementById("external_event");
         new Draggable(draggable, {
@@ -146,6 +162,7 @@ const Index = () => {
     };
 
     const handleCancel = () => {
+        setValues({ ...values, title: '' });
         setModal1Open(false);
     };
 
@@ -237,6 +254,8 @@ const Index = () => {
                         drop={handleRecieve}
                         datesSet={currentMonth}
                         eventClick={handleClick}
+                        editable={true}
+                        eventChange={handleChange}
                     />
                     <Modal title="[รายละเอียดข้อมูล]" open={modal1Open} onOk={handleOk} onCancel={handleCancel}>
                         <p><input name="title" value={values.title} onChange={onChangeValues} /></p>
@@ -249,7 +268,7 @@ const Index = () => {
                         <p>กรุณากรอกข้อมูล...</p>
                     </Modal>
                     <Modal title="[ภาพถ่ายกิจกรรม]" open={modal2Open} onOk={handleOk2} onCancel={handleCancel2}>
-                        <img src={process.env.REACT_APP_IMAGE + image} alt= "" width="100%" />
+                        <img src={process.env.REACT_APP_IMAGE + image} alt="" width="100%" />
                         <input type="file" onChange={handleFile} name="file" />
                     </Modal>
                 </Col>

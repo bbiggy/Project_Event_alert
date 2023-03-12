@@ -24,6 +24,19 @@ exports.listEvent = async (req, res) => {
     }
 };
 
+exports.updateEvent = async (req, res) => {
+    try {
+        console.log(req.body.id)
+        // ค้นหาอะไร เปลี่ยนอะไร
+        res.send(await Events.findOneAndUpdate(
+            { _id:req.body.id }, // ค้นหา
+            { start:req.body.start , end:req.body.end })); //เปลี่ยน
+    } catch (err) {
+        console.log("Server Error");
+        res.status(500).send("Server Error!!");
+    }
+};
+
 exports.handleCurrentMonth = async (req, res) => {
     try {
         console.log(req.body.month)
