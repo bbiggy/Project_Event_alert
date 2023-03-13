@@ -38,6 +38,7 @@ const Index = () => {
         { id: '1', tag: 'นักศึกษาปี 63', color: '#EA3109' },
         { id: '2', tag: 'นักศึกษาปี 64', color: '#F4F' },
         { id: '3', tag: 'นักศึกษาปี 65', color: '#8911FC' },
+        { id: '4', tag: 'ครู', color: '#2874A6' },
     ]
 
     const dataFetchedRef = useRef(false);
@@ -194,6 +195,7 @@ const Index = () => {
         formData.append('file', file)
         updateImage(formData)
             .then(res => {
+                loadData();
                 console.log(res)
             }).catch(err => {
                 console.log(err)
@@ -225,20 +227,20 @@ const Index = () => {
                         <div id="external_event">
                             <ul>
                                 {tag.map((item, index) =>
-                                    <li
+                                    <ol
                                         className="focus_event"
                                         id={item.id}
                                         title={item.tag}
                                         color={item.color}
                                         key={index}
                                         style={{ backgroundColor: item.color }}>{item.tag}
-                                    </li>
+                                    </ol>
                                 )}
                             </ul>
                         </div>
                     </Card>
                     <Card>
-                        <ol>
+                        <ul>
                             {currentEvent.map((item, index) =>
                                 <li key={index}>
                                     {d === moment(item.start).format('DD/MM/YYYY')
@@ -249,11 +251,11 @@ const Index = () => {
                                     }
                                 </li>
                             )}
-                        </ol>
+                        </ul>
                     </Card>
                 </Col>
                 <Col span={18}>
-                    <h1>Index Full</h1>
+                    <h1>Calendar</h1>
                     <FullCalendar
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         headerToolbar={{
@@ -271,14 +273,13 @@ const Index = () => {
                         eventChange={handleChange}
                     />
                     <Modal title="[รายละเอียดข้อมูล]" open={modal1Open} onOk={handleOk} onCancel={handleCancel}>
-                        <p><input name="title" value={values.title} onChange={onChangeValues} /></p>
+                        <p><input placeholder='กรุณากรอกข้อมูล...' name="title" value={values.title} onChange={onChangeValues} /></p>
                         <p><select name='color' onChange={onChangeValues}>
                             <option key={999} value='' >--กรุณาเลือกชั้นปี--</option>
                             {tag.map((item, index) =>
                                 <option key={index} value={item.color} style={{ backgroundColor: item.color }}>{item.tag}</option>
                             )}
                         </select></p>
-                        <p>กรุณากรอกข้อมูล...</p>
                     </Modal>
                     <Modal title="[ภาพถ่ายกิจกรรม]" open={modal2Open} onOk={handleOk2} onCancel={handleCancel2}
                         footer={[
